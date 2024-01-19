@@ -1,35 +1,35 @@
-// Require necessary NPM packages
+/*********************************************************************************
+ * WEB422 – Assignment 1* I declare that this assignment is my own work in accordance 
+ * with Seneca Academic Policy. No part of this assignment has been copied 
+ * manually or electronically from any other source* (including web sites) 
+ * or distributed to other students.*
+ * * Name: ____Luqman_Dirie_____ Student ID: ____108737222_____ Date: ___1/19/2024____
+ * * Cyclic Link: _________https://sangria-iguana-hem.cyclic.cloud____________
+ * *********************************************************************************/
+
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
-// Initialize express application
 const app = express();
 
-// Enable CORS for all requests
 app.use(cors());
 
-// Enable parsing of json bodies in requests
 app.use(express.json());
 
-// Require the MoviesDB module
 const MoviesDB = require('./modules/moviesDB');
 const moviesDB = new MoviesDB();
 
-// Define PORT
 const PORT = process.env.PORT || 8080;
 
-// Initialize the MoviesDB instance and start the server if successful
 moviesDB.initialize(process.env.MONGODB_CONN_STRING)
   .then(() => {
     console.log('Database connection successful!');
 
-    // Define a simple route to get started
     app.get('/', (req, res) => {
       res.json({ message: "API Listening" });
     });
 
-    // Start listening for requests after a successful database connection
     app.listen(PORT, () => {
       console.log(`server listening on: ${PORT}.`);
     });
@@ -38,7 +38,6 @@ moviesDB.initialize(process.env.MONGODB_CONN_STRING)
     console.log('Database connection failed:', err);
   });
 
-  // POST route to add a new movie
 app.post('/api/movies', async (req, res) => {
     try {
         const newMovie = await moviesDB.addNewMovie(req.body);
@@ -48,7 +47,7 @@ app.post('/api/movies', async (req, res) => {
     }
 });
 
-// GET route to retrieve movies with optional pagination and title filtering
+
 app.get('/api/movies', async (req, res) => {
     const { page, perPage, title } = req.query;
     try {
@@ -58,8 +57,6 @@ app.get('/api/movies', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
-// GET route to retrieve a single movie by id
 app.get('/api/movies/:id', async (req, res) => {
     try {
         const movie = await moviesDB.getMovieById(req.params.id);
@@ -72,8 +69,6 @@ app.get('/api/movies/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
-// PUT route to update a movie by id
 app.put('/api/movies/:id', async (req, res) => {
     try {
         const updateResult = await moviesDB.updateMovieById(req.body, req.params.id);
@@ -87,7 +82,6 @@ app.put('/api/movies/:id', async (req, res) => {
     }
 });
 
-// DELETE route to delete a movie by id
 app.delete('/api/movies/:id', async (req, res) => {
     try {
         const deleteResult = await moviesDB.deleteMovieById(req.params.id);
