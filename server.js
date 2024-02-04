@@ -10,12 +10,15 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const path = require('path'); // Add this line
 
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
+
+// Serve static files from the root directory
+app.use(express.static(path.join(__dirname, ''))); // Add this line
 
 const MoviesDB = require('./modules/moviesDB');
 const moviesDB = new MoviesDB();
